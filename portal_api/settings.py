@@ -40,6 +40,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,6 +54,8 @@ INSTALLED_APPS = [
     # Extensions
     'rest_framework_simplejwt',
     'corsheaders',
+    'django_filters',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -84,7 +87,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'portal_api.wsgi.application'
+# WSGI_APPLICATION = 'portal_api.wsgi.application'
+ASGI_APPLICATION = 'portal_api.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -117,6 +121,13 @@ AUTH_PASSWORD_VALIDATORS = [
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
+    )
 }
 
 # Internationalization
