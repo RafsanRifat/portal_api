@@ -53,6 +53,8 @@ INSTALLED_APPS = [
 
     # Custom apps
     'api_v1',
+    'authentication',
+    'employees',
 
     # Extensions
     'rest_framework_simplejwt',
