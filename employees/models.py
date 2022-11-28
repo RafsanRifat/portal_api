@@ -29,6 +29,9 @@ class EmployeesProfile(models.Model):
     is_verified = models.BooleanField(default=False)
     sociallinks = models.ManyToManyField(SocialLinks, through='EmployeeSocialLinks')
 
+    def __str__(self):
+        return self.user.username
+
 
 class EmployeeSocialLinks(models.Model):
     employeeprofile = models.ForeignKey(EmployeesProfile, on_delete=models.CASCADE)
