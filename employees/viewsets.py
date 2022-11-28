@@ -1,4 +1,6 @@
+from django.core.serializers import get_serializer
 from rest_framework.decorators import action
+from rest_framework.generics import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
 from .models import EmployeesProfile
 from rest_framework.response import Response
@@ -6,18 +8,11 @@ from rest_framework.response import Response
 from .serializers import EmployeesProfileSerializer
 
 
-class EmployeesViewset(ModelViewSet):
+class EmployeesPublicViewset(ModelViewSet):
+    http_method_names = ['get']
 
     def get_queryset(self):
-        if self.action == 'employees':
-            return EmployeesProfile.objects.all()
+        return EmployeesProfile.objects.all()
 
-    def get_serializer_class(self, *args, **kwargs):
-        if self.action == 'employees':
-            return EmployeesProfileSerializer
-
-    @action(detail=False, methods=['Get'], name='employees', url_path='employees')
-    def employees(self, request):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+    def get_serializer_class(self):
+        return EmployeesProfileSerializer
