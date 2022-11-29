@@ -44,3 +44,17 @@ class EmployeeRegistrationSerializer(ModelSerializer):
         )
         employees_profile.save()
         return employees_profile
+
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+    def validate(self, attrs):
+        try:
+            user = User.objects.get(email=attrs['email'])
+            if not user.check_password(attrs['password']):
+                raise Exception('Wrong Password !')
+        except Exception:
+            raise serializers.ValidationError({"validation_error": "Email or password is incorrect"})
+        return attrs
