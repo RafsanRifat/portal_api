@@ -20,6 +20,14 @@ class AuthViewset(ModelViewSet):
             return LoginSerializer
         elif self.action == 'logout':
             return EmptySerializer
+        return EmptySerializer
+
+    def list(self, request):
+        return Response({
+            "Employee Registration": f"{request.build_absolute_uri()}employee_registration/",
+            "User Login": f"{request.build_absolute_uri()}login/",
+            "Logout": f"{request.build_absolute_uri()}logout/",
+        })
 
     @action(detail=False, methods=['POST'], name='employee registration', url_path='employee_registration')
     def employee_registration(self, request):
