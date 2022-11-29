@@ -43,4 +43,4 @@ class EmployeeRegistrationSerializer(ModelSerializer):
 
         )
         employees_profile.save()
-        return user
+        return employees_profile
