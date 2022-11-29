@@ -58,3 +58,7 @@ class LoginSerializer(serializers.Serializer):
         except Exception:
             raise serializers.ValidationError({"validation_error": "Email or password is incorrect"})
         return attrs
+
+
+class EmptySerializer(serializers.Serializer):
+    pass

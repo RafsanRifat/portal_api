@@ -1,11 +1,13 @@
 from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .serializers import EmployeeRegistrationSerializer, LoginSerializer
+from .serializers import EmployeeRegistrationSerializer, LoginSerializer, EmptySerializer
 
 
 class AuthViewset(ModelViewSet):
@@ -16,6 +18,8 @@ class AuthViewset(ModelViewSet):
             return EmployeeRegistrationSerializer
         elif self.action == 'login_view':
             return LoginSerializer
+        elif self.action == 'logout':
+            return EmptySerializer
 
     @action(detail=False, methods=['POST'], name='employee registration', url_path='employee_registration')
     def employee_registration(self, request):
@@ -36,3 +40,13 @@ class AuthViewset(ModelViewSet):
                 'access': str(refresh.access_token),
             })
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['POST'], name='logout', url_path='logout')
+    def logout(self, request):
+        # getting all the tokens of the current user
+        tokens = OutstandingToken.objects.filter(user_id=request.user.id)
+        # blacklisting all the tokens of the current user
+        for token in tokens:
+            t, _ = BlacklistedToken.objects.get_or_create(token=token)
+
+        return Response(status=status.HTTP_205_RESET_CONTENT)
