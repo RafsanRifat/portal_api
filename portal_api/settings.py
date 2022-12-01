@@ -15,6 +15,7 @@ import environ
 import os
 
 env = environ.Env(
+
     # set casting, default value
     DEBUG=(bool, False),
     SECRET_KEY=(str, ''),
@@ -23,7 +24,7 @@ env = environ.Env(
     EMAIL_HOST_USER=(str, ''),
     EMAIL_HOST_PASSWORD=(str, ''),
     EMAIL_PORT=(str, ''),
-    DEFAULT_FROM_EMAIL=(str, ''),
+    # DEFAULT_FROM_EMAIL=(str, ''),
 
 )
 
@@ -170,7 +171,7 @@ EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = env('EMAIL_PORT')
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+# DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 EMAIL_USE_TLS = True
 
 # Default primary key field type

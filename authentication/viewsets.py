@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.core.mail import send_mail
 
 from .serializers import EmployeeRegistrationSerializer, LoginSerializer, EmptySerializer
 
@@ -39,6 +40,13 @@ class AuthViewset(ModelViewSet):
 
     @action(detail=False, methods=['POST'], name='user login', url_path='login')
     def login_view(self, request):
+        send_mail(
+            'Subject here',
+            'Here is the message.',
+            'rafsantestmail@gmail.com ',
+            ['rafsanpust255@gmail.com'],
+            fail_silently=False,
+        )
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = User.objects.get(email=serializer.data['email'])
