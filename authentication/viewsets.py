@@ -8,7 +8,7 @@ from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, Bl
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.mail import send_mail
 
-from .serializers import EmployeeRegistrationSerializer, LoginSerializer, EmptySerializer
+from .serializers import EmployeeRegistrationSerializer, LoginSerializer, EmptySerializer, ChangePasswordSerializer
 
 
 class AuthViewset(ModelViewSet):
@@ -21,6 +21,8 @@ class AuthViewset(ModelViewSet):
             return LoginSerializer
         elif self.action == 'logout':
             return EmptySerializer
+        elif self.action == 'change_password':
+            return ChangePasswordSerializer
         return EmptySerializer
 
     def list(self, request):
@@ -28,6 +30,7 @@ class AuthViewset(ModelViewSet):
             "Employee Registration": f"{request.build_absolute_uri()}employee_registration/",
             "User Login": f"{request.build_absolute_uri()}login/",
             "Logout": f"{request.build_absolute_uri()}logout/",
+            "change_password": f"{request.build_absolute_uri()}change_password/",
         })
 
     @action(detail=False, methods=['POST'], name='employee registration', url_path='employee_registration')
@@ -66,3 +69,7 @@ class AuthViewset(ModelViewSet):
             t, _ = BlacklistedToken.objects.get_or_create(token=token)
 
         return Response(status=status.HTTP_205_RESET_CONTENT)
+
+    @action(detail=False, methods=['POST'], name='change_password', url_path='change_password')
+    def change_password(self, request):
+        pass
