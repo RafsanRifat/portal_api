@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
@@ -13,6 +13,11 @@ from .serializers import EmployeeRegistrationSerializer, LoginSerializer, EmptyS
 
 class AuthViewset(ModelViewSet):
     queryset = []
+
+    def get_permissions(self):
+        if self.action in ['employee_registration', 'login_view']:
+            self.permission_classes = [AllowAny, ]
+        return super(self.__class__, self).get_permissions()
 
     def get_serializer_class(self):
         if self.action == 'employee_registration':
@@ -74,7 +79,7 @@ class AuthViewset(ModelViewSet):
     def change_password(self, request):
         user = request.user
         if user.is_authenticated:
-            serializer = self.get_serializer(data=request.data)
+            serializer = self.get_serializer(data=request.data, context={'request': self.request})
             serializer.is_valid(raise_exception=True)
             user.set_password(serializer.validated_data['new_password'])
             user.save()
