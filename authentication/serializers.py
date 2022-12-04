@@ -65,7 +65,23 @@ class EmptySerializer(serializers.Serializer):
 
 
 class ChangePasswordSerializer(serializers.Serializer):
-
     old_password = serializers.CharField()
-    new_password = serializers.CharField()
-    confirm_new_password = serializers.CharField()
+    new_password = serializers.CharField(write_only=True)
+    confirm_new_password = serializers.CharField(write_only=True)
+
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError('Old password does not match')
+
+    def validate(self, attrs):
+        # new_password = attrs['new_password']
+        # confirm_new_password = attrs['confirm_new_password']
+        new_password = attrs.get('new_password', None)
+        confirm_new_password = attrs.get('confirm_new_password', None)
+
+        if not new_password == confirm_new_password:
+            raise serializers.ValidationError({
+                'confirm_new_password': ['Password does not match']
+            })
+        return attrs

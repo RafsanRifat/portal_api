@@ -72,4 +72,11 @@ class AuthViewset(ModelViewSet):
 
     @action(detail=False, methods=['POST'], name='change_password', url_path='change_password')
     def change_password(self, request):
-        pass
+        user = request.user
+        if user.is_authenticated:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            user.set_password(serializer.validated_data['new_password'])
+            user.save()
+            return Response({'message': 'password changed'}, status=status.HTTP_200_OK)
+        return Response({'message': 'Please Login first'}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
