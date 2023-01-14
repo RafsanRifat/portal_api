@@ -17,7 +17,7 @@ class EmployeeRegistrationSerializer(ModelSerializer):
 
     class Meta:
         model = EmployeesProfile
-        fields = ('first_name', 'last_name', 'email', 'password', 'gender', 'phone_number',)
+        fields = ('first_name', 'last_name', 'email', 'password', 'gender', 'phone_number', 'avatar')
 
     def create(self, validated_data):
         user = User.objects.create(
@@ -39,7 +39,8 @@ class EmployeeRegistrationSerializer(ModelSerializer):
         employees_profile = EmployeesProfile.objects.create(
             user=user,
             gender=validated_data['gender'],
-            phone_number=validated_data['phone_number']
+            phone_number=validated_data['phone_number'],
+            avatar=validated_data['avatar']
 
         )
         employees_profile.save()

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import Group, User
+from PIL import Image
 
 
 # Create your models here.
@@ -28,6 +29,14 @@ class EmployeesProfile(models.Model):
     alternative_address = models.CharField(max_length=50, null=True)
     is_verified = models.BooleanField(default=False)
     sociallinks = models.ManyToManyField(SocialLinks, through='EmployeeSocialLinks')
+
+    # Compressing image before saving in Database
+    def save(self, *args, **kwargs):
+        if self.avatar:
+            image = Image.open(self.avatar)
+            image = image.resize((300,300))
+            image.save(self.avatar.path, optimize=True, quality=85)
+        super(EmployeesProfile, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.user.username
